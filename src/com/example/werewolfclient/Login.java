@@ -40,6 +40,22 @@ public class Login extends Activity {
 			
 			
 		});
+		
+		Button register = (Button) findViewById(R.id.register);
+		register.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+
+				
+				Intent myIntent = new Intent(Login.this, Register.class);
+				//myIntent.putExtra("key", value); //Optional parameters
+				Login.this.startActivity(myIntent);
+				
+			}
+			
+			
+		});
 	}
 
 	@Override
