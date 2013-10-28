@@ -1,0 +1,72 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".GameCheck" >
+
+    <TextView
+        android:id="@+id/day"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/create"
+        android:layout_marginTop="28dp"
+        android:text="Day to Night \nFrequency (1-10)"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/holo_red_dark" />
+
+    <EditText
+        android:id="@+id/dayField"
+        android:inputType="number"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/day"
+        android:layout_toRightOf="@+id/day"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <Button
+        android:id="@+id/createGame"
+        android:visibility="invisible"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignRight="@+id/dayField"
+        android:layout_below="@+id/dayField"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="82dp"
+        android:background="@drawable/custombutton"
+        android:text="Create Game" />
+
+    <Button
+        android:id="@+id/ret"
+        android:visibility="invisible"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignBaseline="@+id/createGame"
+        android:layout_alignBottom="@+id/createGame"
+        android:layout_alignLeft="@+id/day"
+        android:layout_marginLeft="14dp"
+        android:background="@drawable/custombutton"
+        android:text="Return to Login" />
+
+    <TextView
+        android:id="@+id/create"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="118dp"
+        android:text="Create New Game?"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/holo_red_dark" />
+
+</RelativeLayout>

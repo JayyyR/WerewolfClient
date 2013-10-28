@@ -18,21 +18,23 @@ import org.apache.http.message.BasicNameValuePair;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class Register extends Activity {
-	
+
 	String firstName;
 	String lastName;
 	String userName;
 	String password;
 	String email;
-	
-	
+
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +61,19 @@ public class Register extends Activity {
 				userName = userField.getText().toString();
 				password = passField.getText().toString();
 				email = emailField.getText().toString();
-				
-				registerUser task = new registerUser();
-				task.execute();
 
+				if (firstName.isEmpty() || lastName.isEmpty() || userName.isEmpty() || password.isEmpty() || email.isEmpty())
+					Toast.makeText(getApplicationContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
+				else{
+					registerUser task = new registerUser();
+					task.execute();
+
+					Intent myIntent = new Intent(Register.this, Login.class);
+					//myIntent.putExtra("key", value); //Optional parameters
+					Register.this.startActivity(myIntent);
+
+					Toast.makeText(getApplicationContext(), "Registration Successful", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 
@@ -72,7 +83,7 @@ public class Register extends Activity {
 
 		@Override
 		protected String doInBackground(String... urls) {
-			
+
 			System.out.println("Hi");
 
 			HttpClient client = new DefaultHttpClient();
@@ -94,11 +105,8 @@ public class Register extends Activity {
 				post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 				HttpResponse response = client.execute(post);
-				BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-				String line = "";
-				while ((line = rd.readLine()) != null) {
-					System.out.println(line);
-				}
+
+
 
 			} catch (IOException e) {
 				e.printStackTrace();
