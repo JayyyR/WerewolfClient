@@ -17,10 +17,13 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -35,17 +38,23 @@ public class GameCheck extends Activity {
 
 	String freq;
 	boolean gameCheck;
+	boolean isWolf;
 	TextView header ;
 	TextView daynite;
 	EditText dayField;
 	Button createGame;
 	Button returnBut;
-
+	String userID;
+	boolean playerCheck;
+	double wolfCount;
+	double playerCount;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_game_check);
 
+		Bundle bundle = getIntent().getExtras();
+		userID = bundle.getString("login");
 		header = (TextView) findViewById(R.id.create);
 		daynite = (TextView) findViewById(R.id.day);
 		dayField = (EditText) findViewById(R.id.dayField);
@@ -138,9 +147,8 @@ public class GameCheck extends Activity {
 			progressDialog.dismiss();
 			//if thers already a game, play it, else make one
 			if (gameCheck){
-				Intent myIntent = new Intent(GameCheck.this, MainActivity.class);
-				//myIntent.putExtra("key", value); //Optional parameters
-				GameCheck.this.startActivity(myIntent);
+				CheckPlayer check = new CheckPlayer();
+				check.execute();
 			}
 			else{
 
@@ -201,11 +209,219 @@ public class GameCheck extends Activity {
 			super.onPostExecute(result);
 			progressDialog.dismiss();
 			//if thers already a game, play it, else make one
-			Intent myIntent = new Intent(GameCheck.this, MainActivity.class);
-			//myIntent.putExtra("key", value); //Optional parameters
-			GameCheck.this.startActivity(myIntent);
+			CheckPlayer check = new CheckPlayer();
+			check.execute();
 
 		};
 	}
+
+	private class CheckPlayer extends AsyncTask<Void, Void, Void> {
+		ProgressDialog progressDialog;
+		//declare other objects as per your need
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog= ProgressDialog.show(GameCheck.this, "Checking Player","Please Wait", true);
+
+			//do initialization of required objects objects here                
+		};      
+		@Override
+		protected Void doInBackground(Void... params)
+		{   
+			Log.v("login", userID);
+			HttpClient client = new DefaultHttpClient();
+			String urlString = "http://jayyyyrwerewolf.herokuapp.com/players/" + userID;
+			HttpGet get = new HttpGet(urlString);
+			try {
+
+				HttpResponse response = client.execute(get);
+				Log.v("login", "http resp " + response);
+				// Get the response
+				BufferedReader rd = new BufferedReader
+						(new InputStreamReader(response.getEntity().getContent()));
+
+				String result = rd.readLine();
+				Log.v("login", "http respstring " + result);
+
+				//no player
+				if (result.equals("<html>")){
+					Log.v("login", "no player");
+					playerCheck = false;
+				}
+				else{	//yes player
+					playerCheck = true;
+				}
+
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			//do loading operation here  
+			return null;
+		}       
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			super.onPostExecute(result);
+			progressDialog.dismiss();
+
+			if (playerCheck){
+				Intent myIntent = new Intent(GameCheck.this, MainActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString("login", userID);
+				myIntent.putExtras(bundle); //Optional parameters
+				GameCheck.this.startActivity(myIntent);
+			}
+			else{
+				GetWolves getwolf = new GetWolves();
+				getwolf.execute();
+			}
+
+		};
+	}
+
+	private class CreatePlayer extends AsyncTask<Void, Void, Void> {
+		ProgressDialog progressDialog;
+		//declare other objects as per your need
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog= ProgressDialog.show(GameCheck.this, "Checking Player","Please Wait", true);
+
+			//do initialization of required objects objects here                
+		};      
+		@Override
+		protected Void doInBackground(Void... params)
+		{   
+
+			Log.v("login", "wolfCount " +  wolfCount);
+			Log.v("login", "playcount " + playerCount);
+			String isWolf = "false";
+			//is Player a werewolf?
+			if ((wolfCount/playerCount) < .3){
+				Log.v("login", "division: " + (wolfCount/playerCount));
+				isWolf = "true";
+			}
+
+
+			LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE); 
+			Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+			double longitude = location.getLongitude();
+			double latitude = location.getLatitude();
+			HttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost("http://jayyyyrwerewolf.herokuapp.com/players/insert");
+			try {
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				nameValuePairs.add(new BasicNameValuePair("id",
+						userID));
+				nameValuePairs.add(new BasicNameValuePair("isDead",
+						"false"));
+				nameValuePairs.add(new BasicNameValuePair("lat",
+						String.valueOf(latitude)));
+				nameValuePairs.add(new BasicNameValuePair("lng",
+						String.valueOf(longitude)));
+				nameValuePairs.add(new BasicNameValuePair("userId",
+						userID));
+				nameValuePairs.add(new BasicNameValuePair("isWerewolf",
+						isWolf));
+				post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+				HttpResponse response = client.execute(post);
+
+
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			//do loading operation here  
+			return null;
+		}       
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			super.onPostExecute(result);
+			progressDialog.dismiss();
+			Intent myIntent = new Intent(GameCheck.this, MainActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putString("login", userID);
+			myIntent.putExtras(bundle); //Optional parameters
+			GameCheck.this.startActivity(myIntent);
+
+
+		};
+	}
+
+	private class GetWolves extends AsyncTask<Void, Void, Void> {
+		ProgressDialog progressDialog;
+		//declare other objects as per your need
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog= ProgressDialog.show(GameCheck.this, "Checking Player","Please Wait", true);
+
+			//do initialization of required objects objects here                
+		};      
+		@Override
+		protected Void doInBackground(Void... params)
+		{   
+
+			HttpClient client = new DefaultHttpClient();
+			String urlString = "http://jayyyyrwerewolf.herokuapp.com/players/werewolves";
+			HttpGet get = new HttpGet(urlString);
+			try {
+
+				HttpResponse response = client.execute(get);
+
+				// Get the response
+				BufferedReader rd = new BufferedReader
+						(new InputStreamReader(response.getEntity().getContent()));
+
+				String result = rd.readLine();
+
+				Log.v("login", "wolf count is: "+ result);
+
+				wolfCount = Double.parseDouble(result);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			HttpClient client2 = new DefaultHttpClient();
+			String urlString2 = "http://jayyyyrwerewolf.herokuapp.com/players/all";
+			HttpGet get2 = new HttpGet(urlString2);
+			try {
+
+				HttpResponse response = client2.execute(get2);
+
+				// Get the response
+				BufferedReader rd = new BufferedReader
+						(new InputStreamReader(response.getEntity().getContent()));
+
+				String result = rd.readLine();
+
+				Log.v("login", "all count is: "+ result);
+
+				playerCount = Double.parseDouble(result);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+
+			//do loading operation here  
+			return null;
+		}       
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			super.onPostExecute(result);
+			progressDialog.dismiss();
+
+			CreatePlayer createPlayer = new CreatePlayer();
+			createPlayer.execute();
+
+		};
+	}
+
 
 }

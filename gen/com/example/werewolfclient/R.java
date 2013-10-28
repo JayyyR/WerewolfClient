@@ -33,7 +33,7 @@ public final class R {
         public static final int redback=0x7f020006;
     }
     public static final class id {
-        public static final int action_settings=0x7f090015;
+        public static final int action_settings=0x7f090017;
         public static final int clawWolf=0x7f090009;
         public static final int create=0x7f090001;
         public static final int createGame=0x7f090003;
@@ -55,6 +55,8 @@ public final class R {
         public static final int ret=0x7f090004;
         public static final int userField=0x7f090007;
         public static final int username=0x7f090005;
+        public static final int usr=0x7f090015;
+        public static final int wereMes=0x7f090016;
     }
     public static final class layout {
         public static final int activity_game_check=0x7f030000;
@@ -62,6 +64,7 @@ public final class R {
         public static final int activity_main=0x7f030002;
         public static final int activity_register=0x7f030003;
         public static final int drawer_list_item=0x7f030004;
+        public static final int fragment_profile=0x7f030005;
     }
     public static final class menu {
         public static final int game_check=0x7f080000;
@@ -72,6 +75,7 @@ public final class R {
     public static final class string {
         public static final int action_settings=0x7f060001;
         public static final int app_name=0x7f060000;
+        public static final int hello_blank_fragment=0x7f060005;
         public static final int hello_world=0x7f060002;
         public static final int title_activity_game_check=0x7f060004;
         public static final int title_activity_register=0x7f060003;

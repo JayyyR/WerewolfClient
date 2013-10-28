@@ -20,6 +20,7 @@ import org.apache.http.params.HttpParams;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -81,7 +82,15 @@ public class Login extends Activity {
 	}
 
 	private class login extends AsyncTask<String, Void, String> {
+		ProgressDialog progressDialog;
+		//declare other objects as per your need
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog= ProgressDialog.show(Login.this, "Logging in","Please Wait", true);
 
+			//do initialization of required objects objects here                
+		};      
 		@Override
 		protected String doInBackground(String... urls) {
 			Log.v("test", "in async");
@@ -113,7 +122,7 @@ public class Login extends Activity {
 
 		@Override
 		protected void onPostExecute(String result) {
-			
+			progressDialog.dismiss();
 			Log.v("test", "login pass is: " + loginPass);
 			Log.v("test", "check pass is: " + checkedPass);
 			if (!loginPass.equals(checkedPass))
@@ -121,7 +130,9 @@ public class Login extends Activity {
 			else{
 				Intent myIntent = new Intent(Login.this, GameCheck.class);
 				Log.v("login", loginName);
-				myIntent.putExtra("user", loginName); //Optional parameters
+				Bundle bundle = new Bundle();
+				bundle.putString("login", loginName);
+				myIntent.putExtras(bundle); //Optional parameters
 				Login.this.startActivity(myIntent);
 			}
 
