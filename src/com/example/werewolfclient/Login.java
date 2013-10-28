@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -144,6 +145,12 @@ public class Login extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
+	}
+	
+	@Override
+	public void onBackPressed() {
+	   Log.d("CDA", "onBackPressed Called");
+
 	}
 
 }

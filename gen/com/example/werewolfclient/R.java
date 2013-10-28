@@ -33,7 +33,8 @@ public final class R {
         public static final int redback=0x7f020006;
     }
     public static final class id {
-        public static final int action_settings=0x7f090017;
+        public static final int action_settings=0x7f090018;
+        public static final int aliveMes=0x7f090017;
         public static final int clawWolf=0x7f090009;
         public static final int create=0x7f090001;
         public static final int createGame=0x7f090003;

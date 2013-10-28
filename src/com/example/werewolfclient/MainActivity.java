@@ -1,11 +1,24 @@
 package com.example.werewolfclient;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -25,13 +38,21 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	String userID;
+	double lat;
+	double lng;
+	boolean isDead;
+	boolean isWerewolf;
+	boolean isVotedOn;
 	String[] menuItems;
+	UserInfo user;
 	TextView count;
 	Button fdUp;
 	Integer penalty = 5;
 	ListView mDrawerList;
 	DrawerLayout mDrawerLayout;
 	ActionBarDrawerToggle mDrawerToggle;
+	
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +75,11 @@ public class MainActivity extends Activity {
 
 		Bundle bundle = getIntent().getExtras();
 		userID = bundle.getString("login");
+		
+		user = new UserInfo();
+		user.execute();
+		
+
 		mDrawerToggle = new ActionBarDrawerToggle(
 				this,                  /* host Activity */
 				mDrawerLayout,         /* DrawerLayout object */
@@ -78,8 +104,11 @@ public class MainActivity extends Activity {
 
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		getActionBar().setHomeButtonEnabled(true);
+		
+		
 	}
-
+	
+	
 	/* The click listner for ListView in the navigation drawer */
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 		@Override
@@ -91,7 +120,9 @@ public class MainActivity extends Activity {
 
 				Bundle bundle = new Bundle();
 				bundle.putString("login", userID);
-
+				bundle.putBoolean("wolf", isWerewolf);
+				bundle.putBoolean("vote", isVotedOn);
+				bundle.putBoolean("dead", isDead);
 				fragment.setArguments(bundle);
 				FragmentManager fragmentManager = getFragmentManager();
 				fragmentManager.beginTransaction().replace(R.id.home_view, fragment).commit();
@@ -102,7 +133,99 @@ public class MainActivity extends Activity {
 				mDrawerList.setItemChecked(position, true);
 				mDrawerLayout.closeDrawer(mDrawerList);
 			}
+			if (position==4){
+				
+				Intent myIntent = new Intent(MainActivity.this, Login.class);
+				MainActivity.this.startActivity(myIntent);
+			}
 		}
+	}
+	
+	private class UserInfo extends AsyncTask<Void, Void, Void> {
+
+		
+		public UserInfo(){
+
+		}
+	
+		ProgressDialog progressDialog;
+		//declare other objects as per your need
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog= ProgressDialog.show(MainActivity.this, "Getting Your Information","Please Wait", true);
+
+			//do initialization of required objects objects here                
+		};      
+		@Override
+		protected Void doInBackground(Void... params)
+		{   
+
+			HttpClient client = new DefaultHttpClient();
+			String urlString = "http://jayyyyrwerewolf.herokuapp.com/players/" + userID;
+			HttpGet get = new HttpGet(urlString);
+			try {
+
+				HttpResponse response = client.execute(get);
+
+				// Get the response
+				BufferedReader rd = new BufferedReader
+						(new InputStreamReader(response.getEntity().getContent()));
+
+				String result = rd.readLine();
+
+				Log.v("players", result);
+				
+				result = result.replace("{", "");
+				result = result.replace("}", "");
+				result = result.replace("\"", "");
+				Log.v("players", result);
+				String[] stuff = result.split(",");
+				for (String x:stuff){
+					Log.v("players", "." + x + ".");
+					String[] att = x.split(":");
+					
+					if (att[0].equals("lat")){
+						Log.v("players", "doing lat");
+						lat = Double.parseDouble(att[1]);
+					}
+					else if (att[0].equals("lng")){
+						Log.v("players", "doing lng");
+						lng = Double.parseDouble(att[1]);
+					}
+					else if (att[0].equals("votedOn")){
+						Log.v("players", "doing vote");
+						isVotedOn = Boolean.parseBoolean(att[1]);
+					}
+					else if (att[0].equals("dead")){
+						Log.v("players", "doing dead");
+						isDead = Boolean.parseBoolean(att[1]);
+					}
+					else if (att[0].equals("werewolf")){
+						Log.v("players", "doing wolf");
+						Log.v("players", "wolf att 1 is ." + att[1]+".");
+						Log.v("players", "wolf bool: " +Boolean.parseBoolean(att[1]));
+						isWerewolf = Boolean.parseBoolean(att[1]);
+					}
+				}
+
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			//do loading operation here  
+			return null;
+		}       
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			super.onPostExecute(result);
+			progressDialog.dismiss();
+			
+			Log.v("players", "userID: " + userID + "\nlat: " + lat + "\nlng: " + lng + "\nvoted: " + isVotedOn + "\ndead: " + isDead + "\nwolf: " + isWerewolf);
+			
+		};
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public class Profile extends Fragment{
 	
 	String userID;
 	boolean isWolf;
-	
+	boolean isDead;
 	public Profile() {
 	}
 	
@@ -37,6 +37,10 @@ public class Profile extends Fragment{
          
          Bundle bundle = this.getArguments();
          userID = bundle.getString("login");
+         isWolf = bundle.getBoolean("wolf");
+         isDead = bundle.getBoolean("dead");
+         
+         Log.v("wolf", "is wolf after getting bundle: " + isWolf);
          
          Log.v("inflate", userID); 
 
@@ -48,10 +52,17 @@ public class Profile extends Fragment{
          userName.setText(userID);
          
          TextView were = (TextView) rootView.findViewById(R.id.wereMes);
+         TextView dead = (TextView) rootView.findViewById(R.id.aliveMes);
          if (!isWolf)
         	 were.setText("You're not a Werewolf");
          else{
+        	 Log.v("wolf", "setting as wolf");
         	 were.setText("You're a werewolf");
+         }
+         if (!isDead)
+        	 dead.setText("You're alive!");
+         else{
+        	 dead.setText("You're dead!");
          }
     
          return rootView;
