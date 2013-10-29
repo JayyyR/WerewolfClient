@@ -4,14 +4,13 @@ package com.example.werewolfclient;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -33,6 +32,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -41,6 +41,7 @@ public class MainActivity extends Activity {
 	double lat;
 	double lng;
 	boolean isDead;
+	boolean isDay;
 	boolean isWerewolf;
 	boolean isVotedOn;
 	String[] menuItems;
@@ -51,6 +52,7 @@ public class MainActivity extends Activity {
 	ListView mDrawerList;
 	DrawerLayout mDrawerLayout;
 	ActionBarDrawerToggle mDrawerToggle;
+	ImageView weather;
 	
 
 
@@ -61,6 +63,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		getActionBar().setTitle("Werewolf");
 
+		weather = (ImageView) findViewById(R.id.dayNightImage);
 
 		mDrawerLayout= (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -208,8 +211,29 @@ public class MainActivity extends Activity {
 						isWerewolf = Boolean.parseBoolean(att[1]);
 					}
 				}
+				
+				
 
 
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			//HttpClient client = new DefaultHttpClient();
+			String urlString2 = "http://jayyyyrwerewolf.herokuapp.com/games/checkday";
+			get = new HttpGet(urlString2);
+			try {
+
+				HttpResponse response = client.execute(get);
+
+				// Get the response
+				BufferedReader rd = new BufferedReader
+						(new InputStreamReader(response.getEntity().getContent()));
+
+				String result = rd.readLine();
+				Log.v("bool", result);
+				isDay = Boolean.parseBoolean(result);
+				Log.v("bool", "after parse " +Boolean.parseBoolean(result));
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -217,16 +241,22 @@ public class MainActivity extends Activity {
 			//do loading operation here  
 			return null;
 		}       
+		@SuppressLint("NewApi")
 		@Override
 		protected void onPostExecute(Void result)
 		{
 			super.onPostExecute(result);
 			progressDialog.dismiss();
+			if (!isDay)
+				weather.setBackground(getResources().getDrawable(R.drawable.fullmoon));
 			
+			weather.setVisibility(View.VISIBLE);
 			Log.v("players", "userID: " + userID + "\nlat: " + lat + "\nlng: " + lng + "\nvoted: " + isVotedOn + "\ndead: " + isDead + "\nwolf: " + isWerewolf);
 			
 		};
 	}
+	
+	
 
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
