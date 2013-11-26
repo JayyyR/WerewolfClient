@@ -35,6 +35,8 @@ public class Profile extends Fragment{
          View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
          getActivity().setTitle("Profile");
          
+         
+         
          Bundle bundle = this.getArguments();
          userID = bundle.getString("login");
          isWolf = bundle.getBoolean("wolf");

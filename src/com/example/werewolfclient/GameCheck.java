@@ -22,8 +22,10 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -305,6 +307,17 @@ public class GameCheck extends Activity {
 			}
 
 
+			final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+
+			if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+
+				this.cancel(true);
+				makeToast();
+			}
+
+			
+
+
 			LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE); 
 			Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 			double longitude = location.getLongitude();
@@ -338,6 +351,7 @@ public class GameCheck extends Activity {
 			//do loading operation here  
 			return null;
 		}       
+		
 		@Override
 		protected void onPostExecute(Void result)
 		{
@@ -422,6 +436,11 @@ public class GameCheck extends Activity {
 
 		};
 	}
-
+	
+	private void makeToast() {
+		Toast.makeText(getApplicationContext(), "Please turn your gps on", Toast.LENGTH_SHORT).show();
+		
+	}
+	
 
 }

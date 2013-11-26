@@ -4,10 +4,12 @@ package com.example.werewolfclient;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
@@ -22,9 +24,11 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.LayoutParams;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +40,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 	String userID;
 	double lat;
 	double lng;
@@ -53,8 +57,7 @@ public class MainActivity extends Activity {
 	DrawerLayout mDrawerLayout;
 	ActionBarDrawerToggle mDrawerToggle;
 	ImageView weather;
-	
-
+	public static FragmentManager fragmentManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class MainActivity extends Activity {
 		getActionBar().setTitle("Werewolf");
 
 		weather = (ImageView) findViewById(R.id.dayNightImage);
+	
 
 		mDrawerLayout= (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -127,7 +131,7 @@ public class MainActivity extends Activity {
 				bundle.putBoolean("vote", isVotedOn);
 				bundle.putBoolean("dead", isDead);
 				fragment.setArguments(bundle);
-				FragmentManager fragmentManager = getFragmentManager();
+				fragmentManager = getFragmentManager();
 				fragmentManager.beginTransaction().replace(R.id.home_view, fragment).commit();
 
 
@@ -135,6 +139,42 @@ public class MainActivity extends Activity {
 				// update selected item and title, then close the drawer
 				mDrawerList.setItemChecked(position, true);
 				mDrawerLayout.closeDrawer(mDrawerList);
+			}
+			
+			if (position==2){
+				Fragment fragment = new PlayersPage();
+				Bundle bundle = new Bundle();
+				bundle.putString("login", userID);
+				bundle.putBoolean("wolf", isWerewolf);
+				bundle.putBoolean("vote", isVotedOn);
+				bundle.putBoolean("dead", isDead);
+				fragment.setArguments(bundle);
+				fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction().replace(R.id.home_view, fragment).commit();
+				// update selected item and title, then close the drawer
+				mDrawerList.setItemChecked(position, true);
+				mDrawerLayout.closeDrawer(mDrawerList);
+			}
+			
+			if (position == 3){
+				Fragment fragment = new Map();
+
+
+				Bundle bundle = new Bundle();
+				bundle.putString("login", userID);
+				bundle.putBoolean("wolf", isWerewolf);
+				bundle.putBoolean("vote", isVotedOn);
+				bundle.putBoolean("dead", isDead);
+				fragment.setArguments(bundle);
+				fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction().replace(R.id.home_view, fragment).commit();
+
+
+
+				// update selected item and title, then close the drawer
+				mDrawerList.setItemChecked(position, true);
+				mDrawerLayout.closeDrawer(mDrawerList);
+			
 			}
 			if (position==4){
 				
