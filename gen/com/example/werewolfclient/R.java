@@ -265,7 +265,7 @@ containing a value of this type.
         public static final int activity_register=0x7f030003;
         public static final int drawer_list_item=0x7f030004;
         public static final int fragment_map=0x7f030005;
-        public static final int fragment_playerpage=0x7f030006;
+        public static final int fragment_playervotepage=0x7f030006;
         public static final int fragment_profile=0x7f030007;
         public static final int player_list=0x7f030008;
     }

@@ -108,7 +108,7 @@ int layout activity_main 0x7f030002
 int layout activity_register 0x7f030003
 int layout drawer_list_item 0x7f030004
 int layout fragment_map 0x7f030005
-int layout fragment_playerpage 0x7f030006
+int layout fragment_playervotepage 0x7f030006
 int layout fragment_profile 0x7f030007
 int layout player_list 0x7f030008
 int menu game_check 0x7f0b0000
