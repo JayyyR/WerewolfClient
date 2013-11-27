@@ -66,7 +66,8 @@ int drawable ic_plusone_tall_off_client 0x7f020021
 int drawable orangeback 0x7f020022
 int drawable redback 0x7f020023
 int drawable sunny 0x7f020024
-int drawable vote 0x7f020025
+int drawable villager 0x7f020025
+int drawable vote 0x7f020026
 int id action_settings 0x7f050021
 int id aliveMes 0x7f05001e
 int id clawWolf 0x7f05000e

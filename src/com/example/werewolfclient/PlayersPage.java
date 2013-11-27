@@ -33,7 +33,9 @@ import android.widget.Toast;
 public class PlayersPage extends ListFragment{
 
 	ArrayList<String> playerList = new ArrayList<String>();
+	ArrayList<Boolean> wolfList = new ArrayList<Boolean>();
 	String[] players;
+	Boolean[] wolves;
 	String userID;
 	boolean isWolf;
 	boolean isDead;
@@ -45,10 +47,10 @@ public class PlayersPage extends ListFragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		con = getActivity();
-        Bundle bundle = this.getArguments();
-        userID = bundle.getString("login");
-        isWolf = bundle.getBoolean("wolf");
-        isDead = bundle.getBoolean("dead");
+		Bundle bundle = this.getArguments();
+		userID = bundle.getString("login");
+		isWolf = bundle.getBoolean("wolf");
+		isDead = bundle.getBoolean("dead");
 		View rootView = inflater.inflate(R.layout.fragment_playervotepage, container, false);
 		getActivity().setTitle("Players");
 
@@ -69,41 +71,46 @@ public class PlayersPage extends ListFragment{
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		// TODO Auto-generated method stub
-		super.onListItemClick(l, v, position, id);
+		
 
-		thePos = position;
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+		if (!isWolf){
+			super.onListItemClick(l, v, position, id);
 
-		// set title
-		alertDialogBuilder.setTitle("Are you sure?");
+			thePos = position;
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
-		// set dialog message
-		alertDialogBuilder
-		.setMessage("Are you sure  you want to vote for " +  players[position])
-		.setCancelable(false)
-		.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog,int id) {
-				// if this button is clicked, close
-				
-				hasVoted voteCheck = new hasVoted();
-				voteCheck.execute();
-				
+			// set title
+			alertDialogBuilder.setTitle("Are you sure?");
 
-			}
-		})
-		.setNegativeButton("No",new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog,int id) {
-				// if this button is clicked, just close
-				// the dialog box and do nothing
-				dialog.cancel();
-			}
-		});
+			// set dialog message
+			alertDialogBuilder
+			.setMessage("Are you sure  you want to vote for " +  players[position])
+			.setCancelable(false)
+			.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,int id) {
+					// if this button is clicked, close
 
-		// create alert dialog
-		AlertDialog alertDialog = alertDialogBuilder.create();
+					hasVoted voteCheck = new hasVoted();
+					voteCheck.execute();
 
-		// show it
-		alertDialog.show();
+
+				}
+			})
+			.setNegativeButton("No",new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog,int id) {
+					// if this button is clicked, just close
+					// the dialog box and do nothing
+					dialog.cancel();
+				}
+			});
+
+			// create alert dialog
+			AlertDialog alertDialog = alertDialogBuilder.create();
+
+			// show it
+			alertDialog.show();
+
+		}
 
 	}
 
@@ -143,22 +150,26 @@ public class PlayersPage extends ListFragment{
 
 				JSONArray jsonarr = new JSONArray(player);
 
-				
+
 				Log.v("player1", "jsonArr is: " + jsonarr);
 				for(int i = 0; i < jsonarr.length(); i++){
 					Log.v("player1", "in for");
 					JSONObject jsonobj = jsonarr.getJSONObject(i);
 
-					
+
 					String id=jsonobj.getString("id");
-					
+
 					String votedOn=jsonobj.getString("votes");
 
 					String dead=jsonobj.getString("dead");
+					
+					String wolf=jsonobj.getString("werewolf");
 
 					//if player is alive and not you add him to the list 
-					if (dead.equals("false") && !id.equals(userID))
+					if (dead.equals("false") && !id.equals(userID)){
 						playerList.add(id);
+						wolfList.add(Boolean.parseBoolean(wolf));
+					}
 
 					Log.v("player1", "id is: " + id + " voted on is: " + votedOn + " dead is: " + dead);
 
@@ -178,14 +189,15 @@ public class PlayersPage extends ListFragment{
 			// TODO Auto-generated method stub
 			progressDialog.dismiss();
 			players = playerList.toArray(new String[playerList.size()]);
-			setListAdapter(new PlayerAdapter(getActivity(), players));
+			wolves = wolfList.toArray(new Boolean[wolfList.size()]);
+			setListAdapter(new PlayerAdapter(getActivity(), players, isWolf, wolves));
 			super.onPostExecute(result);
 		}
 
 
 
 	}
-	
+
 	private class hasVoted extends AsyncTask<String, Void, String> {
 
 		ProgressDialog progressDialog;
@@ -214,7 +226,7 @@ public class PlayersPage extends ListFragment{
 
 				String hasVoted = rd.readLine();
 				Log.v("test", "."+hasVoted+".");
-				
+
 				if (hasVoted.equals("true")){
 					Log.v("vote", "hasvoted was true");
 					voteCheckBool = true;
@@ -235,7 +247,7 @@ public class PlayersPage extends ListFragment{
 		protected void onPostExecute(String result){
 			super.onPostExecute(result);
 			progressDialog.dismiss();
-			
+
 			if(!voteCheckBool){
 				Vote vote = new Vote(players[thePos], getActivity(), userID);
 				vote.execute();

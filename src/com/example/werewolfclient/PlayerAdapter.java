@@ -12,11 +12,15 @@ public class PlayerAdapter extends ArrayAdapter<String> {
 
 	private final Context context;
 	private final String[] values;
+	private final Boolean[] wolves;
+	private final boolean isWolf;
 
-	public PlayerAdapter(Context context, String[] values) {
+	public PlayerAdapter(Context context, String[] values, boolean isWolf, Boolean[] wolves) {
 		super(context, R.layout.player_list, values);
 		this.context = context;
 		this.values = values;
+		this.isWolf=isWolf;
+		this.wolves=wolves;
 	}
 
 	@Override
@@ -28,6 +32,15 @@ public class PlayerAdapter extends ArrayAdapter<String> {
 		TextView textView = (TextView) rowView.findViewById(R.id.label);
 		ImageView imageView = (ImageView) rowView.findViewById(R.id.logo);
 		textView.setText(values[position]);
+		
+		if (isWolf){
+			
+			if (wolves[position])
+				imageView.setImageResource(R.drawable.ic_launcher);
+			else 
+				imageView.setImageResource(R.drawable.villager);
+			
+		}
 
 		// Change icon based on name
 		String s = values[position];
