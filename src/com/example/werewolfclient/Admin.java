@@ -41,6 +41,7 @@ public class Admin extends Fragment{
 	int maxVotes=0;
 	String playerToKill;
 	String playerKillWolf;
+	String theNews;
 	public Admin() {
 	}
 
@@ -206,12 +207,100 @@ public class Admin extends Fragment{
 		protected void onPostExecute(Void result){
 			progressDialog.dismiss();
 			
+			String news;
+			if (playerKillWolf.equals("true"))
+				news = "Player " + playerToKill + " has been voted dead;He was a wolf";
+			else
+				news = "Player " + playerToKill + " has been voted dead;He was not a wolf";
+			SetNews task = new SetNews(news);
+			task.execute();
+
+		}
+
+	}
+	
+	private class SetNews extends AsyncTask<Void, Void, Void> {
+
+		ProgressDialog progressDialog;
+		String news;
+		
+		public SetNews(String news){
+			this.news = news;
+		}
+
+		@Override
+		protected void onPreExecute(){
+			progressDialog= ProgressDialog.show(getActivity(), "Setting News","Please Wait", true);
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			HttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost("http://jayyyyrwerewolf.herokuapp.com/games/changenews");
+			try {
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				nameValuePairs.add(new BasicNameValuePair("news", news));
+				post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+				client.execute(post);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+		@Override
+		protected void onPostExecute(Void result){
+			progressDialog.dismiss();
+			
+			ResetVotes task = new ResetVotes();
+			task.execute();
 			//add news
 			
 
 		}
 
 	}
+	
+	private class ResetVotes extends AsyncTask<Void, Void, Void> {
+
+		ProgressDialog progressDialog;
+		String news;
+	
+
+		@Override
+		protected void onPreExecute(){
+			progressDialog= ProgressDialog.show(getActivity(), "Resetting Votes","Please Wait", true);
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			HttpClient client = new DefaultHttpClient();
+			HttpGet get = new HttpGet("http://jayyyyrwerewolf.herokuapp.com/players/resetvoting");
+			HttpGet get2 = new HttpGet("http://jayyyyrwerewolf.herokuapp.com/games/changeday");
+			try {
+				client.execute(get);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			try {
+				client.execute(get2);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+		@Override
+		protected void onPostExecute(Void result){
+			progressDialog.dismiss();
+
+
+		}
+
+	}
+
 
 
 

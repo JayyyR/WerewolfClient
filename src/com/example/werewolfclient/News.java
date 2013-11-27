@@ -74,7 +74,7 @@ public class News extends Fragment{
 			// set some properties of rowTextView or something
 			rowTextView.setText(x);
 			rowTextView.setLayoutParams(lp);
-			rowTextView.setTextSize(50);
+			rowTextView.setTextSize(25);
 			rowTextView.setId(count);
 			rowTextView.setTextColor(Color.RED);
 			
