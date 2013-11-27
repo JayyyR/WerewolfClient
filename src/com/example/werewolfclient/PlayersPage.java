@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class PlayersPage extends ListFragment{
 
@@ -36,7 +37,9 @@ public class PlayersPage extends ListFragment{
 	String userID;
 	boolean isWolf;
 	boolean isDead;
+	boolean voteCheckBool;
 	Context con;
+	int thePos= 0;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,7 +71,7 @@ public class PlayersPage extends ListFragment{
 		// TODO Auto-generated method stub
 		super.onListItemClick(l, v, position, id);
 
-		final int thePos = position;
+		thePos = position;
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
 		// set title
@@ -81,8 +84,10 @@ public class PlayersPage extends ListFragment{
 		.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog,int id) {
 				// if this button is clicked, close
-				Vote vote = new Vote(players[thePos], getActivity());
-				vote.execute();
+				
+				hasVoted voteCheck = new hasVoted();
+				voteCheck.execute();
+				
 
 			}
 		})
@@ -178,6 +183,69 @@ public class PlayersPage extends ListFragment{
 		}
 
 
+
+	}
+	
+	private class hasVoted extends AsyncTask<String, Void, String> {
+
+		ProgressDialog progressDialog;
+
+		@Override
+		protected void onPreExecute(){
+			progressDialog= ProgressDialog.show(getActivity(), "Voting","Please Wait", true);
+			Log.v("vote", "CHECKING VOTE FOR: " + userID);
+
+		}
+
+		@Override
+		protected String doInBackground(String... params) {
+			HttpClient client = new DefaultHttpClient();
+
+			String urlString = "http://jayyyyrwerewolf.herokuapp.com/players/hasVoted?id=";
+			urlString+=userID;
+			HttpGet get = new HttpGet(urlString);
+			try {
+
+				HttpResponse response = client.execute(get);
+				Log.v("test", "afetr response");
+				// Get the response
+				BufferedReader rd = new BufferedReader
+						(new InputStreamReader(response.getEntity().getContent()));
+
+				String hasVoted = rd.readLine();
+				Log.v("test", "."+hasVoted+".");
+				
+				if (hasVoted.equals("true")){
+					Log.v("vote", "hasvoted was true");
+					voteCheckBool = true;
+				}
+				else{
+					Log.v("vote", "hasvoted was false");
+					voteCheckBool = false;
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+		@Override
+		protected void onPostExecute(String result){
+			super.onPostExecute(result);
+			progressDialog.dismiss();
+			
+			if(!voteCheckBool){
+				Vote vote = new Vote(players[thePos], getActivity(), userID);
+				vote.execute();
+			}
+			else{
+				//dialog.cancel();
+				Toast.makeText(getActivity(), "You already voted today", Toast.LENGTH_SHORT).show();;
+			}
+
+		}
 
 	}
 
