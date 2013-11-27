@@ -4,6 +4,7 @@ package com.example.werewolfclient;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -48,7 +49,10 @@ public class MainActivity extends FragmentActivity {
 	boolean isDay;
 	boolean isWerewolf;
 	boolean isVotedOn;
+	boolean isAdmin;
+	Context mContext;
 	String[] menuItems;
+	String[] adminItems;
 	UserInfo user;
 	TextView count;
 	Button fdUp;
@@ -70,8 +74,11 @@ public class MainActivity extends FragmentActivity {
 	
 
 		mDrawerLayout= (DrawerLayout) findViewById(R.id.drawer_layout);
-
+		
+		
+		mContext=this;
 		menuItems = getResources().getStringArray(R.array.menu_array);
+		adminItems = getResources().getStringArray(R.array.admin_array);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 		// Set the adapter for the list view
 		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
@@ -181,6 +188,50 @@ public class MainActivity extends FragmentActivity {
 				Intent myIntent = new Intent(MainActivity.this, Login.class);
 				MainActivity.this.startActivity(myIntent);
 			}
+			
+			if (position==5){
+				Log.v("frag", "news");
+				Fragment fragment = new News();
+
+
+				Bundle bundle = new Bundle();
+				bundle.putString("login", userID);
+				bundle.putBoolean("wolf", isWerewolf);
+				bundle.putBoolean("vote", isVotedOn);
+				bundle.putBoolean("dead", isDead);
+				bundle.putBoolean("weather", isDay);
+				fragment.setArguments(bundle);
+				fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction().replace(R.id.home_view, fragment).commit();
+
+
+
+				// update selected item and title, then close the drawer
+				mDrawerList.setItemChecked(position, true);
+				mDrawerLayout.closeDrawer(mDrawerList);
+			}
+			
+			if (position==6){
+				Fragment fragment = new Admin();
+
+
+				Bundle bundle = new Bundle();
+				bundle.putString("login", userID);
+				bundle.putBoolean("wolf", isWerewolf);
+				bundle.putBoolean("vote", isVotedOn);
+				bundle.putBoolean("dead", isDead);
+				bundle.putBoolean("weather", isDay);
+				fragment.setArguments(bundle);
+				fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction().replace(R.id.home_view, fragment).commit();
+
+
+
+				// update selected item and title, then close the drawer
+				mDrawerList.setItemChecked(position, true);
+				mDrawerLayout.closeDrawer(mDrawerList);
+				
+			}
 		}
 	}
 	
@@ -240,6 +291,10 @@ public class MainActivity extends FragmentActivity {
 						Log.v("players", "doing vote");
 						isVotedOn = Boolean.parseBoolean(att[1]);
 					}
+					else if (att[0].equals("admin")){
+						Log.v("players", "doing admin");
+						isAdmin = Boolean.parseBoolean(att[1]);
+					}
 					else if (att[0].equals("dead")){
 						Log.v("players", "doing dead");
 						isDead = Boolean.parseBoolean(att[1]);
@@ -293,6 +348,15 @@ public class MainActivity extends FragmentActivity {
 			weather.setVisibility(View.VISIBLE);
 			Log.v("players", "userID: " + userID + "\nlat: " + lat + "\nlng: " + lng + "\nvoted: " + isVotedOn + "\ndead: " + isDead + "\nwolf: " + isWerewolf);
 			
+			
+			if(isAdmin){
+				Log.v("admin", "is admin");
+				
+				mDrawerList.setAdapter(new ArrayAdapter<String>(mContext,
+						R.layout.drawer_list_item, adminItems));
+				
+				
+			}
 		};
 	}
 	

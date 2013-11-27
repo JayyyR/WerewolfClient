@@ -1,0 +1,31 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#edebe8" >
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <Button
+        android:id="@+id/changebut"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="87dp"
+        android:background="@drawable/custombutton"
+        
+        android:text="Change" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+         android:textColor="@android:color/holo_red_dark"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="52dp"
+        android:text="Change Day/Night"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</RelativeLayout>

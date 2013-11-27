@@ -6,5 +6,16 @@
         <item>Who\'s Playing</item>
         <item>Map</item>
         <item>Logout</item>
+        <item>News</item>
+    </string-array>
+    
+    <string-array name="admin_array">
+        <item>My Profile</item>
+        <item>Stats</item>
+        <item>Who\'s Playing</item>
+        <item>Map</item>
+        <item>Logout</item>
+         <item>News</item>
+         <item>Admin</item>
     </string-array>
 </resources>

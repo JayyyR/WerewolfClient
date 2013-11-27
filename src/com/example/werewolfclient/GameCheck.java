@@ -50,6 +50,7 @@ public class GameCheck extends Activity {
 	boolean playerCheck;
 	double wolfCount;
 	double playerCount;
+	boolean createdGame = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -208,12 +209,63 @@ public class GameCheck extends Activity {
 		@Override
 		protected void onPostExecute(Void result)
 		{
+
+			createdGame = true;
 			super.onPostExecute(result);
 			progressDialog.dismiss();
 			//if thers already a game, play it, else make one
 			CheckPlayer check = new CheckPlayer();
 			check.execute();
 
+		};
+	}
+
+	private class SetAdmin extends AsyncTask<Void, Void, Void> {
+		ProgressDialog progressDialog;
+		//declare other objects as per your need
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog= ProgressDialog.show(GameCheck.this, "Setting Admin","Please Wait", true);
+
+			//do initialization of required objects objects here                
+		};      
+		@Override
+		protected Void doInBackground(Void... params)
+		{   
+			HttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost("http://jayyyyrwerewolf.herokuapp.com/players/setAdmin");
+			try {
+
+
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				nameValuePairs.add(new BasicNameValuePair("id",
+						userID));
+				post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+				HttpResponse response = client.execute(post);
+
+
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			//do loading operation here  
+			return null;
+		}       
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			super.onPostExecute(result);
+			progressDialog.dismiss();
+			
+			Intent myIntent = new Intent(GameCheck.this, MainActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putString("login", userID);
+			myIntent.putExtras(bundle); //Optional parameters
+			GameCheck.this.startActivity(myIntent);
+			
 		};
 	}
 
@@ -315,7 +367,7 @@ public class GameCheck extends Activity {
 				makeToast();
 			}
 
-			
+
 
 
 			LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE); 
@@ -351,18 +403,25 @@ public class GameCheck extends Activity {
 			//do loading operation here  
 			return null;
 		}       
-		
+
 		@Override
 		protected void onPostExecute(Void result)
 		{
 			super.onPostExecute(result);
 			progressDialog.dismiss();
-			Intent myIntent = new Intent(GameCheck.this, MainActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putString("login", userID);
-			myIntent.putExtras(bundle); //Optional parameters
-			GameCheck.this.startActivity(myIntent);
-
+			if (createdGame){
+				SetAdmin task = new SetAdmin();
+				task.execute();
+			}
+			else{
+				
+				
+				Intent myIntent = new Intent(GameCheck.this, MainActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString("login", userID);
+				myIntent.putExtras(bundle); //Optional parameters
+				GameCheck.this.startActivity(myIntent);
+			}
 
 		};
 	}
@@ -436,11 +495,11 @@ public class GameCheck extends Activity {
 
 		};
 	}
-	
+
 	private void makeToast() {
 		Toast.makeText(getApplicationContext(), "Please turn your gps on", Toast.LENGTH_SHORT).show();
-		
+
 	}
-	
+
 
 }

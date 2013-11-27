@@ -9,6 +9,7 @@ package com.example.werewolfclient;
 
 public final class R {
     public static final class array {
+        public static final int admin_array=0x7f080001;
         public static final int menu_array=0x7f080000;
     }
     public static final class attr {
@@ -214,15 +215,17 @@ containing a value of this type.
         public static final int ic_plusone_small_off_client=0x7f02001f;
         public static final int ic_plusone_standard_off_client=0x7f020020;
         public static final int ic_plusone_tall_off_client=0x7f020021;
-        public static final int orangeback=0x7f020022;
-        public static final int redback=0x7f020023;
-        public static final int sunny=0x7f020024;
-        public static final int villager=0x7f020025;
-        public static final int vote=0x7f020026;
+        public static final int newspaper_texture=0x7f020022;
+        public static final int orangeback=0x7f020023;
+        public static final int redback=0x7f020024;
+        public static final int sunny=0x7f020025;
+        public static final int villager=0x7f020026;
+        public static final int vote=0x7f020027;
     }
     public static final class id {
-        public static final int action_settings=0x7f050021;
-        public static final int aliveMes=0x7f05001e;
+        public static final int action_settings=0x7f050025;
+        public static final int aliveMes=0x7f050022;
+        public static final int changebut=0x7f05001b;
         public static final int clawWolf=0x7f05000e;
         public static final int create=0x7f050006;
         public static final int createGame=0x7f050008;
@@ -236,13 +239,15 @@ containing a value of this type.
         public static final int firstname=0x7f050015;
         public static final int home_view=0x7f050012;
         public static final int hybrid=0x7f050004;
-        public static final int label=0x7f050020;
+        public static final int label=0x7f050024;
         public static final int lastField=0x7f050019;
         public static final int lastname=0x7f050016;
         public static final int left_drawer=0x7f050014;
-        public static final int location_map=0x7f05001b;
+        public static final int location_map=0x7f05001d;
         public static final int login=0x7f05000f;
-        public static final int logo=0x7f05001f;
+        public static final int logo=0x7f050023;
+        public static final int newsFrag=0x7f05001e;
+        public static final int newsText=0x7f05001f;
         public static final int none=0x7f050000;
         public static final int normal=0x7f050001;
         public static final int passField=0x7f05000d;
@@ -251,10 +256,11 @@ containing a value of this type.
         public static final int ret=0x7f050009;
         public static final int satellite=0x7f050002;
         public static final int terrain=0x7f050003;
+        public static final int textView1=0x7f05001c;
         public static final int userField=0x7f05000c;
         public static final int username=0x7f05000a;
-        public static final int usr=0x7f05001c;
-        public static final int wereMes=0x7f05001d;
+        public static final int usr=0x7f050020;
+        public static final int wereMes=0x7f050021;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f070000;
@@ -265,10 +271,12 @@ containing a value of this type.
         public static final int activity_main=0x7f030002;
         public static final int activity_register=0x7f030003;
         public static final int drawer_list_item=0x7f030004;
-        public static final int fragment_map=0x7f030005;
-        public static final int fragment_playervotepage=0x7f030006;
-        public static final int fragment_profile=0x7f030007;
-        public static final int player_list=0x7f030008;
+        public static final int fragment_admin=0x7f030005;
+        public static final int fragment_map=0x7f030006;
+        public static final int fragment_news=0x7f030007;
+        public static final int fragment_playervotepage=0x7f030008;
+        public static final int fragment_profile=0x7f030009;
+        public static final int player_list=0x7f03000a;
     }
     public static final class menu {
         public static final int game_check=0x7f0b0000;
