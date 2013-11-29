@@ -40,6 +40,7 @@ public class PlayersPage extends ListFragment{
 	boolean isWolf;
 	boolean isDead;
 	boolean voteCheckBool;
+	boolean isDay;
 	Context con;
 	int thePos= 0;
 
@@ -51,6 +52,7 @@ public class PlayersPage extends ListFragment{
 		userID = bundle.getString("login");
 		isWolf = bundle.getBoolean("wolf");
 		isDead = bundle.getBoolean("dead");
+		isDay = bundle.getBoolean("day");
 		View rootView = inflater.inflate(R.layout.fragment_playervotepage, container, false);
 		getActivity().setTitle("Players");
 
@@ -73,7 +75,7 @@ public class PlayersPage extends ListFragment{
 		// TODO Auto-generated method stub
 		
 
-		if (!isWolf){
+		if (!isWolf && isDay){
 			super.onListItemClick(l, v, position, id);
 
 			thePos = position;
@@ -110,6 +112,9 @@ public class PlayersPage extends ListFragment{
 			// show it
 			alertDialog.show();
 
+		}
+		else if(!isWolf && !isDay){
+			Toast.makeText(getActivity(), "You can't vote at night", Toast.LENGTH_SHORT).show();
 		}
 
 	}

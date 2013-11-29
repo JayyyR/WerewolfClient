@@ -9,8 +9,6 @@ package com.example.werewolfclient;
 
 public final class Manifest {
     public static final class permission {
-        /**  Creating Permission to receive Google Maps 
-         */
-        public static final String MAPS_RECEIVE="com.arshad.map.permission.MAPS_RECEIVE";
+        public static final String MAPS_RECEIVE="com.vogella.android.locationapi.maps.permission.MAPS_RECEIVE";
     }
 }

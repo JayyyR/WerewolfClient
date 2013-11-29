@@ -155,6 +155,7 @@ public class MainActivity extends FragmentActivity {
 				bundle.putBoolean("wolf", isWerewolf);
 				bundle.putBoolean("vote", isVotedOn);
 				bundle.putBoolean("dead", isDead);
+				bundle.putBoolean("day", isDay);
 				fragment.setArguments(bundle);
 				fragmentManager = getFragmentManager();
 				fragmentManager.beginTransaction().replace(R.id.home_view, fragment).commit();

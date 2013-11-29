@@ -208,19 +208,20 @@ containing a value of this type.
         public static final int common_signin_btn_text_pressed_dark=0x7f020018;
         public static final int common_signin_btn_text_pressed_light=0x7f020019;
         public static final int custombutton=0x7f02001a;
-        public static final int fullmoon=0x7f02001b;
-        public static final int ic_drawer=0x7f02001c;
-        public static final int ic_launcher=0x7f02001d;
-        public static final int ic_plusone_medium_off_client=0x7f02001e;
-        public static final int ic_plusone_small_off_client=0x7f02001f;
-        public static final int ic_plusone_standard_off_client=0x7f020020;
-        public static final int ic_plusone_tall_off_client=0x7f020021;
-        public static final int newspaper_texture=0x7f020022;
-        public static final int orangeback=0x7f020023;
-        public static final int redback=0x7f020024;
-        public static final int sunny=0x7f020025;
-        public static final int villager=0x7f020026;
-        public static final int vote=0x7f020027;
+        public static final int dead=0x7f02001b;
+        public static final int fullmoon=0x7f02001c;
+        public static final int ic_drawer=0x7f02001d;
+        public static final int ic_launcher=0x7f02001e;
+        public static final int ic_plusone_medium_off_client=0x7f02001f;
+        public static final int ic_plusone_small_off_client=0x7f020020;
+        public static final int ic_plusone_standard_off_client=0x7f020021;
+        public static final int ic_plusone_tall_off_client=0x7f020022;
+        public static final int newspaper_texture=0x7f020023;
+        public static final int orangeback=0x7f020024;
+        public static final int redback=0x7f020025;
+        public static final int sunny=0x7f020026;
+        public static final int villager=0x7f020027;
+        public static final int vote=0x7f020028;
     }
     public static final class id {
         public static final int action_settings=0x7f050025;
@@ -243,9 +244,9 @@ containing a value of this type.
         public static final int lastField=0x7f050019;
         public static final int lastname=0x7f050016;
         public static final int left_drawer=0x7f050014;
-        public static final int location_map=0x7f05001d;
         public static final int login=0x7f05000f;
         public static final int logo=0x7f050023;
+        public static final int mapView=0x7f05001d;
         public static final int newsFrag=0x7f05001e;
         public static final int newsText=0x7f05001f;
         public static final int none=0x7f050000;

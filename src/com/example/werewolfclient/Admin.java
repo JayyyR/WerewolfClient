@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -73,13 +74,17 @@ public class Admin extends Fragment{
 					//count votes and kill one werewolf
 					
 					Toast.makeText(getActivity(), "Changed to night! Check the news!", Toast.LENGTH_SHORT).show();
-					GetPlayersDay task = new GetPlayersDay();
-					task.execute();
+					
+					ResetKill killt= new ResetKill();
+					killt.execute();
 				}
 				else{
 					
 					//kill the townspeople
 					Toast.makeText(getActivity(), "Changed to day! Check the news!", Toast.LENGTH_SHORT).show();
+					//temp
+					GetKilledLastNight task = new GetKilledLastNight();
+					task.execute();
 				}
 				
 				
@@ -144,7 +149,7 @@ public class Admin extends Fragment{
 					Log.v("stration", "votes in string is: " + votes);
 					int numVotes = Integer.parseInt(votes);
 					Log.v("stration", "num votes is: " + numVotes);
-					if (numVotes>maxVotes){
+					if (numVotes>=maxVotes){
 						playerToKill= id;
 						maxVotes=numVotes;
 						playerKillWolf = wolf;
@@ -212,6 +217,102 @@ public class Admin extends Fragment{
 				news = "Player " + playerToKill + " has been voted dead;He was a wolf";
 			else
 				news = "Player " + playerToKill + " has been voted dead;He was not a wolf";
+			SetNews task = new SetNews(news);
+			task.execute();
+
+		}
+
+	}
+	
+	private class GetKilledLastNight extends AsyncTask<Void, Void, Void> {
+
+		ProgressDialog progressDialog;
+		ArrayList<String> playerList = new ArrayList<String>();
+		
+
+		@Override
+		protected void onPreExecute(){
+			progressDialog= ProgressDialog.show(getActivity(), "Getting Killed","Please Wait", true);
+		}
+
+		@Override
+		protected Void doInBackground(Void...params) {
+			HttpClient client = new DefaultHttpClient();
+
+			String urlString = "http://jayyyyrwerewolf.herokuapp.com/players/dead";
+			HttpGet get = new HttpGet(urlString);
+			try {
+
+				HttpResponse response = client.execute(get);
+				Log.v("test", "afetr response");
+				// Get the response
+				BufferedReader rd = new BufferedReader
+						(new InputStreamReader(response.getEntity().getContent()));
+
+				String player = rd.readLine();
+				Log.v("player1", "rd realine is: " + player);
+				//				player.replace("[", "");
+				//				player.replace("]", "");
+				//				String[] players = player.split("}");
+				//				for (int i = 0; i < players.length; i++)
+				//					Log.v("player1", ""+players[i]);
+
+				JSONArray jsonarr = new JSONArray(player);
+
+
+				Log.v("player1", "jsonArr is: " + jsonarr);
+				for(int i = 0; i < jsonarr.length(); i++){
+					Log.v("player1", "in fodfr");
+					JSONObject jsonobj = jsonarr.getJSONObject(i);
+					Log.v("player1", "in sadf");
+
+					String id=jsonobj.getString("id");
+					Log.v("player1", "in playerid");
+
+					String votedOn=jsonobj.getString("votes");
+					
+					Log.v("player1", "in votes");
+
+					String dead=jsonobj.getString("dead");
+					
+					Log.v("player1", "in dead");
+					
+					String lastNight=jsonobj.getString("killedLastNight");
+					
+					Log.v("player1", "in killled");
+					
+					Log.v("player1", "id is: " + id + " lastNight is: " + lastNight);
+
+					//if player is alive and not you add him to the list 
+					if (lastNight.equals("true")){
+						Log.v("player1", "adding " + id);
+						playerList.add(id);
+					}
+
+					
+
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+
+		@Override
+		protected void onPostExecute(Void result){
+			progressDialog.dismiss();
+			String news = "No News";
+			StringBuilder newsBuilder = new StringBuilder();
+			for(int i=0; i<playerList.size(); i++){
+				newsBuilder.append(";Player " + playerList.get(i) + " was killed by wolves last night");
+			}
+			if (playerList.size() > 0)
+				news = newsBuilder.toString();
 			SetNews task = new SetNews(news);
 			task.execute();
 
@@ -295,7 +396,54 @@ public class Admin extends Fragment{
 		@Override
 		protected void onPostExecute(Void result){
 			progressDialog.dismiss();
+			
+			
+			//run gamecheck to switch day
+			Intent myIntent = new Intent(getActivity(), GameCheck.class);
+			Log.v("login", userID);
+			Bundle bundle = new Bundle();
+			bundle.putString("login", userID);
+			myIntent.putExtras(bundle); //Optional parameters
+			getActivity().startActivity(myIntent);
 
+
+		}
+
+	}
+	
+	private class ResetKill extends AsyncTask<Void, Void, Void> {
+
+		ProgressDialog progressDialog;
+		String news;
+	
+
+		@Override
+		protected void onPreExecute(){
+			progressDialog= ProgressDialog.show(getActivity(), "Resetting Kills","Please Wait", true);
+		}
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			HttpClient client = new DefaultHttpClient();
+			HttpGet get = new HttpGet("http://jayyyyrwerewolf.herokuapp.com/players/resetkill");
+			try {
+				client.execute(get);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+
+
+		@Override
+		protected void onPostExecute(Void result){
+			progressDialog.dismiss();
+			
+		
+			GetPlayersDay task = new GetPlayersDay();
+			task.execute();
+			
 
 		}
 
