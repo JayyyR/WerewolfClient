@@ -19,6 +19,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,7 +60,8 @@ public class Register extends Activity {
 				firstName = firstField.getText().toString();
 				lastName = lastField.getText().toString();
 				userName = userField.getText().toString();
-				password = passField.getText().toString();
+				password = Integer.toString(passField.getText().toString().hashCode());
+				Log.v("password", "pass is " + password);
 				email = emailField.getText().toString();
 
 				if (firstName.isEmpty() || lastName.isEmpty() || userName.isEmpty() || password.isEmpty() || email.isEmpty())

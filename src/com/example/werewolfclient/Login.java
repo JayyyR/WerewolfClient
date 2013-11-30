@@ -53,7 +53,8 @@ public class Login extends Activity {
 			public void onClick(View v) {
 				// Add login stuff later
 				loginName = userName.getText().toString();
-				loginPass = password.getText().toString();
+				loginPass = Integer.toString(password.getText().toString().hashCode());
+				Log.v("password", "login pass is " + loginPass);
 
 				Log.v("test", "before execute");
 				login task = new login();
