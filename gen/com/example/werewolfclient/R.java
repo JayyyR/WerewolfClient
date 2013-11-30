@@ -221,7 +221,8 @@ containing a value of this type.
         public static final int redback=0x7f020025;
         public static final int sunny=0x7f020026;
         public static final int villager=0x7f020027;
-        public static final int vote=0x7f020028;
+        public static final int villager_icon=0x7f020028;
+        public static final int vote=0x7f020029;
     }
     public static final class id {
         public static final int action_settings=0x7f050025;

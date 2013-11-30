@@ -70,7 +70,8 @@ int drawable orangeback 0x7f020024
 int drawable redback 0x7f020025
 int drawable sunny 0x7f020026
 int drawable villager 0x7f020027
-int drawable vote 0x7f020028
+int drawable villager_icon 0x7f020028
+int drawable vote 0x7f020029
 int id action_settings 0x7f050025
 int id aliveMes 0x7f050022
 int id changebut 0x7f05001b
