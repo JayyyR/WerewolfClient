@@ -134,7 +134,9 @@ public class Map extends Fragment {
 			theMap.addMarker(options);	
 		}
 
-		if (isWolf && !isDay){
+		Log.v("day", "is day is: " + isDay);
+		Log.v("day", "is dead is: " + isDead);
+		if (isWolf && !isDay && !isDead){
 			theMap.setOnMarkerClickListener(new OnMarkerClickListener(){
 
 				@Override

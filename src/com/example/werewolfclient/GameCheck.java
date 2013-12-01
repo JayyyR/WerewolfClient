@@ -321,11 +321,8 @@ public class GameCheck extends Activity {
 			progressDialog.dismiss();
 
 			if (playerCheck){
-				Intent myIntent = new Intent(GameCheck.this, MainActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putString("login", userID);
-				myIntent.putExtras(bundle); //Optional parameters
-				GameCheck.this.startActivity(myIntent);
+				UpdateLoc updateloc = new UpdateLoc();
+				updateloc.execute();
 			}
 			else{
 				GetWolves getwolf = new GetWolves();
@@ -492,6 +489,66 @@ public class GameCheck extends Activity {
 
 			CreatePlayer createPlayer = new CreatePlayer();
 			createPlayer.execute();
+
+		};
+	}
+	
+	private class UpdateLoc extends AsyncTask<Void, Void, Void> {
+		ProgressDialog progressDialog;
+		//declare other objects as per your need
+		@Override
+		protected void onPreExecute()
+		{
+			progressDialog= ProgressDialog.show(GameCheck.this, "Updating Location","Please Wait", true);
+
+			//do initialization of required objects objects here                
+		};      
+		@Override
+		protected Void doInBackground(Void... params)
+		{   
+
+			HttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost("http://jayyyyrwerewolf.herokuapp.com/players/updatePos");
+			try {
+
+				LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE); 
+				Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+				double longitude = location.getLongitude();
+				double latitude = location.getLatitude();
+				
+				List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+				nameValuePairs.add(new BasicNameValuePair("id",
+						userID));
+				nameValuePairs.add(new BasicNameValuePair("lat",
+						Double.toString(latitude)));
+				nameValuePairs.add(new BasicNameValuePair("lng",
+						Double.toString(longitude)));
+				post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+				HttpResponse response = client.execute(post);
+
+
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+
+
+			//do loading operation here  
+			return null;
+		}       
+		@Override
+		protected void onPostExecute(Void result)
+		{
+			super.onPostExecute(result);
+			progressDialog.dismiss();
+
+			Intent myIntent = new Intent(GameCheck.this, MainActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putString("login", userID);
+			myIntent.putExtras(bundle); //Optional parameters
+			GameCheck.this.startActivity(myIntent);
 
 		};
 	}
