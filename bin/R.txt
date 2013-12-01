@@ -72,7 +72,7 @@ int drawable sunny 0x7f020026
 int drawable villager 0x7f020027
 int drawable villager_icon 0x7f020028
 int drawable vote 0x7f020029
-int id action_settings 0x7f050025
+int id action_settings 0x7f050026
 int id aliveMes 0x7f050022
 int id changebut 0x7f05001b
 int id clawWolf 0x7f05000e
@@ -104,6 +104,7 @@ int id password 0x7f05000b
 int id register 0x7f050010
 int id ret 0x7f050009
 int id satellite 0x7f050002
+int id score 0x7f050025
 int id terrain 0x7f050003
 int id textView1 0x7f05001c
 int id userField 0x7f05000c
@@ -122,6 +123,7 @@ int layout fragment_news 0x7f030007
 int layout fragment_playervotepage 0x7f030008
 int layout fragment_profile 0x7f030009
 int layout player_list 0x7f03000a
+int layout stat_list 0x7f03000b
 int menu game_check 0x7f0b0000
 int menu login 0x7f0b0001
 int menu main 0x7f0b0002

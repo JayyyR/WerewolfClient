@@ -148,6 +148,16 @@ public class MainActivity extends FragmentActivity {
 				mDrawerLayout.closeDrawer(mDrawerList);
 			}
 			
+			if (position == 1){
+				Fragment fragment = new Stats();
+				fragmentManager = getFragmentManager();
+				fragmentManager.beginTransaction().replace(R.id.home_view, fragment).commit();
+				// update selected item and title, then close the drawer
+				mDrawerList.setItemChecked(position, true);
+				mDrawerLayout.closeDrawer(mDrawerList);
+				
+			}
+			
 			if (position==2){
 				Fragment fragment = new PlayersPage();
 				Bundle bundle = new Bundle();

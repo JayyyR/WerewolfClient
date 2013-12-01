@@ -225,7 +225,7 @@ containing a value of this type.
         public static final int vote=0x7f020029;
     }
     public static final class id {
-        public static final int action_settings=0x7f050025;
+        public static final int action_settings=0x7f050026;
         public static final int aliveMes=0x7f050022;
         public static final int changebut=0x7f05001b;
         public static final int clawWolf=0x7f05000e;
@@ -257,6 +257,7 @@ containing a value of this type.
         public static final int register=0x7f050010;
         public static final int ret=0x7f050009;
         public static final int satellite=0x7f050002;
+        public static final int score=0x7f050025;
         public static final int terrain=0x7f050003;
         public static final int textView1=0x7f05001c;
         public static final int userField=0x7f05000c;
@@ -279,6 +280,7 @@ containing a value of this type.
         public static final int fragment_playervotepage=0x7f030008;
         public static final int fragment_profile=0x7f030009;
         public static final int player_list=0x7f03000a;
+        public static final int stat_list=0x7f03000b;
     }
     public static final class menu {
         public static final int game_check=0x7f0b0000;
